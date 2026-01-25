@@ -7,7 +7,7 @@
       "Cantos"
     ],
     "description": "For all your reinforcement desires.",
-    "version": "1.1",
+    "version": "1.1.1",
     "dependencies": {
         "game": ""
     }

@@ -8,24 +8,22 @@ namespace PlumbandCube
     public class PlumbandCubeModSystem : ModSystem
     {
 
-        // Called on server and client
-        // Useful for registering block/entity classes on both sides
+
         public override void Start(ICoreAPI api)
         {
-            api.Logger.Notification("Hello from template mod: " + api.Side);
             base.Start(api);
             api.RegisterItemClass("PlumbandCube", typeof(PlumbandCube));
             api.RegisterItemClass("AdminPlumbAndSquare", typeof(Adminplumbandsquare));
         }
 
-        public override void StartServerSide(ICoreServerAPI api)
+        public override void StartServerSide(ICoreServerAPI sapi)
         {
-            api.Logger.Notification("Hello from template mod server side: " + Lang.Get("plumbandcube:hello"));
+            base.StartServerSide(sapi);
         }
 
-        public override void StartClientSide(ICoreClientAPI api)
+        public override void StartClientSide(ICoreClientAPI capi)
         {
-            api.Logger.Notification("Hello from template mod client side: " + Lang.Get("plumbandcube:hello"));
+            base.StartClientSide(capi);
         }
 
     }
