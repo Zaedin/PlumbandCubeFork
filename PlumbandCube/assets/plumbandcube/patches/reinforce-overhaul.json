@@ -1,0 +1,8 @@
+[
+  {
+    "file": "game:itemtypes/resource/mortar.json",
+    "op": "addmerge",
+    "path": "/attributes/reinforcementStrength",
+    "value": 100
+  }
+]
