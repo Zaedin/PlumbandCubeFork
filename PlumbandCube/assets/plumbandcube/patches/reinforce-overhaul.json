@@ -1,4 +1,11 @@
 [
+
+  {
+    "file": "game:itemtypes/resource/ingot.json",
+    "op": "remove",
+    "path": "/attributes/reinforcementStrengthByType",
+    "value": "*"
+  },
   {
     "file": "game:itemtypes/resource/mortar.json",
     "op": "addmerge",
