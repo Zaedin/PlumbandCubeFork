@@ -15,10 +15,7 @@ namespace PlumbandCube
     public class PlumbandCube : Item
     {
         private WorldInteraction[] _interactions;
-
         private List<LoadedTexture> _symbols;
-
-        private int _reinforcementCount;
 
         public override void OnLoaded(ICoreAPI api)
         {
@@ -82,32 +79,20 @@ namespace PlumbandCube
             }
             else
             {
-                if (blockSel == null)
-                {
-                    return;
-                }
+                if (blockSel == null) return;
 
                 var modSystem = byEntity.Api.ModLoader.GetModSystem<ModSystemBlockReinforcement>();
                 var player = (byEntity as EntityPlayer)?.Player;
-                if (player == null)
-                {
-                    return;
-                }
+                if (player == null) return;
 
                 var itemSlot = modSystem.FindResourceForReinforcing(player);
-                if (itemSlot == null)
-                {
-                    return;
-                }
+                if (itemSlot == null) return;
 
                 var strength = itemSlot.Itemstack.ItemAttributes["reinforcementStrength"].AsInt();
                 var @int = slot.Itemstack.Attributes.GetInt("toolMode");
                 var num = 0;
                 var groups = player.GetGroups();
-                if (@int > 0 && @int - 1 < groups.Length)
-                {
-                    num = groups[@int - 1].GroupUid;
-                }
+                if (@int > 0 && @int - 1 < groups.Length) num = groups[@int - 1].GroupUid;
 
                 if (!api.World.BlockAccessor.GetBlock(blockSel.Position).HasBehavior<BlockBehaviorReinforcable>())
                 {
@@ -138,19 +123,14 @@ namespace PlumbandCube
                 var tempPos = new BlockPos(blockSel.Position.dimension);
                 for (var x = min.X; x <= max.X; x++)
                 {
+                    if (itemSlot.StackSize <= 0) break;
                     for (var y = min.Y; y <= max.Y; y++)
                     {
+                        if (itemSlot.StackSize <= 0) break;
                         for (var z = min.Z; z <= max.Z; z++)
                         {
                             tempPos.Set(x, y, z);
-
-                            if (_reinforcementCount <= 0)
-                            {
-                                _reinforcementCount = 25;
-                                itemSlot.TakeOut(1);
-                                itemSlot.MarkDirty();
-
-                            }
+                            if (itemSlot.StackSize <= 0) break; 
 
                             if (!((num > 0) ? modSystem.StrengthenBlock(tempPos, player, strength, num) : modSystem.StrengthenBlock(tempPos, player, strength)))
                             {
@@ -158,7 +138,8 @@ namespace PlumbandCube
                             }
                             else
                             {
-                                _reinforcementCount--;
+                                itemSlot.TakeOut(1);
+                                itemSlot.MarkDirty();
                             }
                         }
                     }
