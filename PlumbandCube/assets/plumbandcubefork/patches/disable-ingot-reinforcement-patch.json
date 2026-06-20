@@ -1,0 +1,7 @@
+[
+  {
+    "file": "game:itemtypes/resource/ingot",
+    "op": "remove",
+    "path": "/attributes/reinforcementStrengthByType"
+  }
+]
