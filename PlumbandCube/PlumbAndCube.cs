@@ -101,7 +101,7 @@ public class PlumbAndCube : Item
             }
 
             // remove 1 from reinforceArea to count with center block
-            var reinforceArea = Math.Clamp(3, 1, 7);
+            var reinforceArea = Math.Clamp(ModConfig.Instance.ReinforceArea, 1, 7);
             var tempPos = new BlockPos(blockSel.Position.dimension);
 
             int uCenter, vCenter;
