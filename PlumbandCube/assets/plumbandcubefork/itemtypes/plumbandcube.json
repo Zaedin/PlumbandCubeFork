@@ -1,11 +1,12 @@
 {
   "code": "plumbandcube",
-  "class": "PlumbandCube",
+  "class": "PlumbAndCube",
   "creativeinventory": {
-    "general": [ "*" ]
+    "general": [ "*" ],
+    "plumbandcube": [ "*" ]
   },
   "shape": {
-    "base": "plumbandcube:shapes/item/tools/plumbandcube"
+    "base": "plumbandcubefork:shapes/item/tools/plumbandcube"
   },
   "attributes": {
     "groundStorageTransform": {

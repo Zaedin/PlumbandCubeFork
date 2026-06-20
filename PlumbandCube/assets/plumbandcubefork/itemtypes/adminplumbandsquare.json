@@ -3,10 +3,10 @@
     "class": "AdminPlumbAndSquare",
     "creativeinventory": {
         "general": [ "*" ],
-        "debug": ["*"]
+        "plumbandcube": [ "*" ]
     },
     "shape": {
-        "base": "plumbandcube:shapes/item/tools/plumbandcube"
+        "base": "plumbandcubefork:shapes/item/tools/plumbandcube"
     },
     "attributes": {
         "groundStorageTransform": {
