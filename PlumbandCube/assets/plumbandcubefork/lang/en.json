@@ -2,10 +2,10 @@
   "item-plumbandcube": "Plumb and Cube",
   "item-admin_reinforcetool": "(Admin) Plumb and Square",
   "PlumbAndCubeSettings": "Configure Plumb and Cube settings",
-  "BlocksPerItem": "Diminishing drops",
+  "BlocksPerItem": "Blocks reinforced per item",
   "BlocksPerItemComment": "Number of blocks each consumed item can reinforce. (default: 1)",
-  "MaxReinforceArea": "Maximum Reinforcement Area",
-  "MaxReinforceAreaComment": "The maximum reinforce area of the plumb and cube tools. 1 = 1x1 square; 5 = 5x5 square (default: 5)",
+  "ReinforceArea": "Reinforcement Area",
+  "ReinforceAreaComment": "The radius of the square reinforced by plumb and cube tools. Ex: 2 = 3x3; 5 = 9x9 (default: 3)",
   "DisableIngotPatch": "Disable ingot patch",
   "DisableIngotPatchComment": "Disable the removal of reinforcement strength of ingots. (default: false)"
 }
