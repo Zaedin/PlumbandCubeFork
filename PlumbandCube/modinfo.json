@@ -3,12 +3,12 @@
     "modid": "plumbandcubefork",
     "name": "Plumb and Cube Fork",
     "authors": [
+      "Zaedin",
       "LickMyBallZack",
-      "Cantos",
-      "Zaedin"
+      "Cantos"
     ],
     "description": "For all your reinforcement desires.",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "dependencies": {
         "game": ""
     }
