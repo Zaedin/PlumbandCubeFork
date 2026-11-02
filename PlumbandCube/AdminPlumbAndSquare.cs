@@ -13,25 +13,30 @@ namespace PlumbAndCube;
 
 internal class AdminPlumbAndSquare : Item
 {
+    private const int AdminReinforceStrength = 99999;
     private WorldInteraction[] _interactions;
     private List<LoadedTexture> _symbols;
-
-    private const int AdminReinforceStrength = 99999;
 
     public override void OnLoaded(ICoreAPI capi)
     {
         if (api.Side != EnumAppSide.Client) return;
 
-        _interactions = ObjectCacheUtil.GetOrCreate(api, "plumbAndSquareInteractions", () => {
-            var stacks = (from obj in api.World.Collectibles where obj.Attributes?["reinforcementStrength"].AsInt() > 0 select new ItemStack(obj)).ToList();
+        _interactions = ObjectCacheUtil.GetOrCreate(api, "plumbAndSquareInteractions", () =>
+        {
+            var stacks = (from obj in api.World.Collectibles
+                where obj.Attributes?["reinforcementStrength"].AsInt() > 0
+                select new ItemStack(obj)).ToList();
 
-            return new WorldInteraction[] {
-                new() {
+            return new WorldInteraction[]
+            {
+                new()
+                {
                     ActionLangCode = "heldhelp-reinforceblock",
                     MouseButton = EnumMouseButton.Right,
                     Itemstacks = stacks.ToArray()
                 },
-                new() {
+                new()
+                {
                     ActionLangCode = "heldhelp-removereinforcement",
                     MouseButton = EnumMouseButton.Left,
                     Itemstacks = stacks.ToArray()
@@ -49,7 +54,8 @@ internal class AdminPlumbAndSquare : Item
         foreach (var texture in _symbols) texture.Dispose();
     }
 
-    public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
+    public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel,
+        EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
     {
         base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
         if (handling == EnumHandHandling.PreventDefault) return;
@@ -61,13 +67,17 @@ internal class AdminPlumbAndSquare : Item
         }
 
         if (blockSel == null) return;
-            
+
         var bre = byEntity.Api.ModLoader.GetModSystem<ModSystemBlockReinforcement>();
 
         var player = (byEntity as EntityPlayer)?.Player;
         if (player == null) return;
 
-        if (player.WorldData.CurrentGameMode != EnumGameMode.Creative) { (player as IServerPlayer)?.SendIngameError("admin_nocreative", "You are not allowed to use this tool!"); return; }
+        if (player.WorldData.CurrentGameMode != EnumGameMode.Creative)
+        {
+            (player as IServerPlayer)?.SendIngameError("admin_nocreative", "You are not allowed to use this tool!");
+            return;
+        }
 
         if (slot.Itemstack != null)
         {
@@ -93,25 +103,25 @@ internal class AdminPlumbAndSquare : Item
 
             if (!didStrengthen)
             {
-                (player as IServerPlayer)?.SendIngameError("alreadyreinforced", "Cannot reinforce block, it's already reinforced!");
+                (player as IServerPlayer)?.SendIngameError("alreadyreinforced",
+                    "Cannot reinforce block, it's already reinforced!");
                 return;
             }
         }
 
         var pos = blockSel.Position;
-        byEntity.World.PlaySoundAt(new AssetLocation("sounds/tool/reinforce"), pos.X, pos.Y, pos.Z, null);
+        byEntity.World.PlaySoundAt(new AssetLocation("sounds/tool/reinforce"), pos.X, pos.Y, pos.Z);
 
         handling = EnumHandHandling.PreventDefaultAction;
-        if (byEntity.World.Side == EnumAppSide.Client) (((EntityPlayer) byEntity).Player as IClientPlayer)?.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        if (byEntity.World.Side == EnumAppSide.Client)
+            (((EntityPlayer)byEntity).Player as IClientPlayer)?.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
     }
 
     private bool StrengthenBlock(ModSystemBlockReinforcement reinforcement, BlockPos pos, IPlayer player, int groupUid)
     {
         var block = api.World.BlockAccessor.GetBlock(pos, BlockLayersAccess.Solid);
         if (!ModConfig.Instance.AdminReinforceAnyBlock || block.HasBehavior<BlockBehaviorReinforcable>())
-        {
             return reinforcement.StrengthenBlock(pos, player, AdminReinforceStrength, groupUid);
-        }
 
         var behaviors = block.CollectibleBehaviors;
         block.CollectibleBehaviors = behaviors.Append(new BlockBehaviorReinforcable(block));
@@ -125,7 +135,8 @@ internal class AdminPlumbAndSquare : Item
         }
     }
 
-    public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handling)
+    public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel,
+        EntitySelection entitySel, ref EnumHandHandling handling)
     {
         if (byEntity.World.Side == EnumAppSide.Client)
         {
@@ -136,9 +147,13 @@ internal class AdminPlumbAndSquare : Item
         if (blockSel == null) return;
 
         var modBre = byEntity.Api.ModLoader.GetModSystem<ModSystemBlockReinforcement>();
-        if ((byEntity as EntityPlayer)?.Player is not IServerPlayer player) { return; }
+        if ((byEntity as EntityPlayer)?.Player is not IServerPlayer player) return;
 
-        if (player.WorldData.CurrentGameMode != EnumGameMode.Creative) { player.SendIngameError("admin_nocreative", "You are not allowed to use this tool!"); return; }
+        if (player.WorldData.CurrentGameMode != EnumGameMode.Creative)
+        {
+            player.SendIngameError("admin_nocreative", "You are not allowed to use this tool!");
+            return;
+        }
 
         var bre = modBre.GetReinforcment(blockSel.Position);
         if (bre == null) return;
@@ -147,14 +162,13 @@ internal class AdminPlumbAndSquare : Item
         {
             var stack = new ItemStack(byEntity.World.GetItem(new AssetLocation(bre.LockedByItemCode)));
             if (!player.InventoryManager.TryGiveItemstack(stack, true))
-            {
                 byEntity.World.SpawnItemEntity(stack, byEntity.Pos.XYZ);
-            }
         }
+
         modBre.ClearReinforcement(blockSel.Position);
 
         var pos = blockSel.Position;
-        byEntity.World.PlaySoundAt(new AssetLocation("sounds/tool/reinforce"), pos.X, pos.Y, pos.Z, null);
+        byEntity.World.PlaySoundAt(new AssetLocation("sounds/tool/reinforce"), pos.X, pos.Y, pos.Z);
 
         handling = EnumHandHandling.PreventDefaultAction;
     }
@@ -176,11 +190,14 @@ internal class AdminPlumbAndSquare : Item
         var capi = api as ICoreClientAPI;
         var seed = 1;
         var texture = FetchOrCreateTexture(seed);
-        modes[0] = new SkillItem() { Code = new AssetLocation("self"), Name = Lang.Get("Reinforce for yourself") }.WithIcon(capi, texture);
+        modes[0] = new SkillItem { Code = new AssetLocation("self"), Name = Lang.Get("Reinforce for yourself") }
+            .WithIcon(capi, texture);
         for (var i = 0; i < groups.Length; i++)
         {
             texture = FetchOrCreateTexture(++seed);
-            modes[i + 1] = new SkillItem() { Code = new AssetLocation("group"), Name = Lang.Get("Reinforce for group " + groups[i].GroupName) }.WithIcon(capi, texture);
+            modes[i + 1] = new SkillItem
+                    { Code = new AssetLocation("group"), Name = Lang.Get("Reinforce for group " + groups[i].GroupName) }
+                .WithIcon(capi, texture);
         }
 
         return modes;
@@ -198,7 +215,11 @@ internal class AdminPlumbAndSquare : Item
     private LoadedTexture GenTexture(int seed, int addLines)
     {
         var capi = api as ICoreClientAPI;
-        return capi.Gui.Icons.GenTexture(48, 48, (ctx, surface) => { capi.Gui.Icons.DrawRandomSymbol(ctx, 0, 0, 48, GuiStyle.MacroIconColor, 2, seed, addLines); });
+        return capi.Gui.Icons.GenTexture(48, 48,
+            (ctx, surface) =>
+            {
+                capi.Gui.Icons.DrawRandomSymbol(ctx, 0, 0, 48, GuiStyle.MacroIconColor, 2, seed, addLines);
+            });
     }
 
     public override WorldInteraction[] GetHeldInteractionHelp(ItemSlot inSlot)

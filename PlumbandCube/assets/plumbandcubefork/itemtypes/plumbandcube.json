@@ -2,8 +2,12 @@
   "code": "plumbandcube",
   "class": "PlumbAndCube",
   "creativeinventory": {
-    "general": [ "*" ],
-    "plumbandcube": [ "*" ]
+    "general": [
+      "*"
+    ],
+    "plumbandcube": [
+      "*"
+    ]
   },
   "shape": {
     "base": "plumbandcubefork:shapes/item/tools/plumbandcube"
@@ -116,5 +120,4 @@
     },
     "scale": 3.6
   }
-
 }

@@ -2,6 +2,9 @@
 
 public class ModConfig
 {
+    private int _blocksPerItem = 1;
+    private int _reinforceArea = 5;
+
     public static ModConfig Instance { get; set; } = new();
 
     /// <summary>
@@ -18,8 +21,6 @@ public class ModConfig
         set => _blocksPerItem = value >= 0 ? value : 0;
     }
 
-    private int _blocksPerItem = 1;
-
     /// <summary>
     ///     The maximum reinforce area of the plumb and cube tools.
     /// </summary>
@@ -28,6 +29,4 @@ public class ModConfig
         get => _reinforceArea;
         set => _reinforceArea = value >= 0 ? value : 0;
     }
-
-    private int _reinforceArea = 5;
 }

@@ -1,15 +1,15 @@
 {
-    "type": "code",
-    "modid": "plumbandcubefork",
-    "name": "Plumb and Cube Fork",
-    "authors": [
-      "Zaedin",
-      "LickMyBallZack",
-      "Cantos"
-    ],
-    "description": "For all your reinforcement desires.",
-    "version": "2.1.0",
-    "dependencies": {
-        "game": ""
-    }
+  "type": "code",
+  "modid": "plumbandcubefork",
+  "name": "Plumb and Cube Fork",
+  "authors": [
+    "Zaedin",
+    "LickMyBallZack",
+    "Cantos"
+  ],
+  "description": "For all your reinforcement desires.",
+  "version": "2.1.0",
+  "dependencies": {
+    "game": ""
+  }
 }

@@ -12,7 +12,10 @@ public class PlumbAndCubeModSystem : ModSystem
     private ICoreAPI _api;
     private IServerNetworkChannel _serverChannel;
 
-    public override double ExecuteOrder() => 1;
+    public override double ExecuteOrder()
+    {
+        return 1;
+    }
 
     public override void StartPre(ICoreAPI api)
     {
