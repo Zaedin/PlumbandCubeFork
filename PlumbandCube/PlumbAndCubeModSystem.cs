@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
+using Vintagestory.GameContent;
 
 namespace PlumbAndCube;
 
@@ -9,6 +11,8 @@ public class PlumbAndCubeModSystem : ModSystem
 {
     private ICoreAPI _api;
     private IServerNetworkChannel _serverChannel;
+
+    public override double ExecuteOrder() => 1;
 
     public override void StartPre(ICoreAPI api)
     {
@@ -41,6 +45,21 @@ public class PlumbAndCubeModSystem : ModSystem
 
         api.RegisterItemClass("PlumbAndCube", typeof(PlumbAndCube));
         api.RegisterItemClass("AdminPlumbAndSquare", typeof(AdminPlumbAndSquare));
+        api.RegisterBlockBehaviorClass("AdminReinforcable", typeof(BlockBehaviorAdminReinforcable));
+    }
+
+    public override void AssetsFinalize(ICoreAPI api)
+    {
+        if (api.Side != EnumAppSide.Server || !ModConfig.Instance.AdminReinforceAnyBlock) return;
+
+        foreach (var block in api.World.Blocks)
+        {
+            if (block.Code == null || block.Id == 0 || block.HasBehavior<BlockBehaviorReinforcable>(true)) continue;
+
+            var behavior = new BlockBehaviorAdminReinforcable(block);
+            block.BlockBehaviors = block.BlockBehaviors.Append(behavior);
+            block.CollectibleBehaviors = block.CollectibleBehaviors.Append(behavior);
+        }
     }
 
     public override void StartServerSide(ICoreServerAPI sapi)
@@ -61,6 +80,8 @@ public class PlumbAndCubeModSystem : ModSystem
                 Mod.Logger.Event($"Received BlocksPerItem of {packet.BlocksPerItem} from server");
                 ModConfig.Instance.ReinforceArea = packet.ReinforceArea;
                 Mod.Logger.Event($"Received ReinforceArea of {packet.ReinforceArea} from server");
+                ModConfig.Instance.AdminReinforceAnyBlock = packet.AdminReinforceAnyBlock;
+                Mod.Logger.Event($"Received AdminReinforceAnyBlock of {packet.AdminReinforceAnyBlock} from server");
             });
     }
 
@@ -69,7 +90,8 @@ public class PlumbAndCubeModSystem : ModSystem
         _serverChannel.SendPacket(new SyncConfigPacket
         {
             BlocksPerItem = ModConfig.Instance.BlocksPerItem,
-            ReinforceArea = ModConfig.Instance.ReinforceArea
+            ReinforceArea = ModConfig.Instance.ReinforceArea,
+            AdminReinforceAnyBlock = ModConfig.Instance.AdminReinforceAnyBlock
         }, player);
     }
 

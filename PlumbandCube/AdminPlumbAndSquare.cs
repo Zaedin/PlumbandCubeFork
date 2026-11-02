@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
+using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
@@ -77,16 +78,18 @@ internal class AdminPlumbAndSquare : Item
             // Reinforce to group
             if (toolMode > 0 && toolMode - 1 < groups.Length) groupUid = groups[toolMode - 1].GroupUid;
 
-            // Not reinforceable
-            if (!api.World.BlockAccessor.GetBlock(blockSel.Position).HasBehavior<BlockBehaviorReinforcable>())
+            var block = api.World.BlockAccessor.GetBlock(blockSel.Position);
+            if (block.Id == 0) return;
+            if (!ModConfig.Instance.AdminReinforceAnyBlock && !block.HasBehavior<BlockBehaviorReinforcable>())
             {
                 (player as IServerPlayer)?.SendIngameError("notreinforcable", "This block can not be reinforced!");
                 return;
             }
+
             bre.ClearReinforcement(blockSel.Position);
 
             // Admin reinforcement Strength
-            var didStrengthen = groupUid > 0 ? bre.StrengthenBlock(blockSel.Position, player, AdminReinforceStrength, groupUid) : bre.StrengthenBlock(blockSel.Position, player, AdminReinforceStrength);
+            var didStrengthen = StrengthenBlock(bre, blockSel.Position, player, groupUid);
 
             if (!didStrengthen)
             {
@@ -100,6 +103,26 @@ internal class AdminPlumbAndSquare : Item
 
         handling = EnumHandHandling.PreventDefaultAction;
         if (byEntity.World.Side == EnumAppSide.Client) (((EntityPlayer) byEntity).Player as IClientPlayer)?.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+    }
+
+    private bool StrengthenBlock(ModSystemBlockReinforcement reinforcement, BlockPos pos, IPlayer player, int groupUid)
+    {
+        var block = api.World.BlockAccessor.GetBlock(pos, BlockLayersAccess.Solid);
+        if (!ModConfig.Instance.AdminReinforceAnyBlock || block.HasBehavior<BlockBehaviorReinforcable>())
+        {
+            return reinforcement.StrengthenBlock(pos, player, AdminReinforceStrength, groupUid);
+        }
+
+        var behaviors = block.CollectibleBehaviors;
+        block.CollectibleBehaviors = behaviors.Append(new BlockBehaviorReinforcable(block));
+        try
+        {
+            return reinforcement.StrengthenBlock(pos, player, AdminReinforceStrength, groupUid);
+        }
+        finally
+        {
+            block.CollectibleBehaviors = behaviors;
+        }
     }
 
     public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handling)

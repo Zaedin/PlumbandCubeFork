@@ -2,6 +2,8 @@
   "item-plumbandcube": "Plumb and Cube",
   "item-admin_reinforcetool": "(Admin) Plumb and Square",
   "PlumbAndCubeSettings": "Configure Plumb and Cube settings",
+  "AdminReinforceAnyBlock": "Admin reinforcement of any block",
+  "AdminReinforceAnyBlockComment": "Allow the admin tool to reinforce plants and other blocks excluded by vanilla. (default: true)",
   "BlocksPerItem": "Blocks reinforced per item",
   "BlocksPerItemComment": "Number of blocks each consumed item can reinforce. (default: 1)",
   "ReinforceArea": "Reinforcement Area",

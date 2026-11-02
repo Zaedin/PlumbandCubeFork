@@ -8,6 +8,12 @@
       "title": "PlumbAndCubeSettings"
     },
     {
+      "code": "AdminReinforceAnyBlock",
+      "comment": "AdminReinforceAnyBlockComment",
+      "type": "boolean",
+      "default": true
+    },
+    {
       "code": "BlocksPerItem",
       "comment": "BlocksPerItemComment",
       "type": "int",
