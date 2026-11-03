@@ -78,8 +78,7 @@ public class PlumbAndCube : Item
             var itemSlot = modSystem.FindResourceForReinforcing(player);
             if (itemSlot?.Itemstack == null || slot?.Itemstack == null || itemSlot.StackSize <= 0)
             {
-                (player as IServerPlayer)?.SendIngameError("noreinforceitem",
-                    "You need at least 1 reinforce item in inventory!");
+                (player as IServerPlayer)?.SendIngameError("noreinforceitem");
                 return;
             }
 
@@ -96,7 +95,7 @@ public class PlumbAndCube : Item
 
             if (!api.World.BlockAccessor.GetBlock(blockSel.Position).HasBehavior<BlockBehaviorReinforcable>())
             {
-                (player as IServerPlayer)?.SendIngameError("notreinforcable", "This block can not be reinforced!");
+                (player as IServerPlayer)?.SendIngameError("notreinforcable");
                 return;
             }
 
@@ -159,8 +158,7 @@ public class PlumbAndCube : Item
 
                 if (modSystem.IsReinforced(tempPos))
                 {
-                    (player as IServerPlayer)?.SendIngameError("alreadyreinforced",
-                        "Cannot reinforce block, it's already reinforced!");
+                    (player as IServerPlayer)?.SendIngameError("alreadyreinforced");
                     return;
                 }
 
@@ -198,8 +196,7 @@ public class PlumbAndCube : Item
                                 itemSlot = modSystem.FindResourceForReinforcing(player);
                                 if (itemSlot?.Itemstack == null)
                                 {
-                                    (player as IServerPlayer)?.SendIngameError("noreinforceitem",
-                                        "You need at least 1 reinforce item in inventory!");
+                                    (player as IServerPlayer)?.SendIngameError("noreinforceitem");
                                     return;
                                 }
 
@@ -286,10 +283,9 @@ public class PlumbAndCube : Item
         }
 
         if (errorCode != "")
-            serverPlayer.SendIngameError("cantremove",
-                errorCode == "notownblock"
-                    ? "Cannot remove reinforcement. This block does not belong to you"
-                    : "Cannot remove reinforcement. It's not reinforced");
+        {
+            serverPlayer.SendIngameError(errorCode);
+        }
 
         var position = blockSel.Position;
         byEntity.World.PlaySoundAt(new AssetLocation("sounds/tool/reinforce"), position.X, position.Y, position.Z);

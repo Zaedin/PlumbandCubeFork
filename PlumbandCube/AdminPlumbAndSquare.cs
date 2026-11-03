@@ -75,7 +75,7 @@ internal class AdminPlumbAndSquare : Item
 
         if (player.WorldData.CurrentGameMode != EnumGameMode.Creative)
         {
-            (player as IServerPlayer)?.SendIngameError("admin_nocreative", "You are not allowed to use this tool!");
+            (player as IServerPlayer)?.SendIngameError("adminnocreative");
             return;
         }
 
@@ -92,19 +92,16 @@ internal class AdminPlumbAndSquare : Item
             if (block.Id == 0) return;
             if (!ModConfig.Instance.AdminReinforceAnyBlock && !block.HasBehavior<BlockBehaviorReinforcable>())
             {
-                (player as IServerPlayer)?.SendIngameError("notreinforcable", "This block can not be reinforced!");
+                (player as IServerPlayer)?.SendIngameError("notreinforcable");
                 return;
             }
 
             bre.ClearReinforcement(blockSel.Position);
 
-            // Admin reinforcement Strength
             var didStrengthen = StrengthenBlock(bre, blockSel.Position, player, groupUid);
-
             if (!didStrengthen)
             {
-                (player as IServerPlayer)?.SendIngameError("alreadyreinforced",
-                    "Cannot reinforce block, it's already reinforced!");
+                (player as IServerPlayer)?.SendIngameError("alreadyreinforced");
                 return;
             }
         }
@@ -151,7 +148,7 @@ internal class AdminPlumbAndSquare : Item
 
         if (player.WorldData.CurrentGameMode != EnumGameMode.Creative)
         {
-            player.SendIngameError("admin_nocreative", "You are not allowed to use this tool!");
+            player.SendIngameError("adminnocreative");
             return;
         }
 

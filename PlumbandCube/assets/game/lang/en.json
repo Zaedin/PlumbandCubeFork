@@ -1,3 +1,9 @@
 {
-  "tabname-plumbandcube": "Plumb and Cube"
+  "tabname-plumbandcube": "Plumb and Cube",
+  "ingameerror-adminnocreative": "You are not allowed to use this tool!",
+  "ingameerror-notreinforcable": "This block can not be reinforced!",
+  "ingameerror-alreadyreinforced": "Cannot reinforce block, it's already reinforced!",
+  "ingameerror-noreinforceitem": "You need at least 1 reinforce item in inventory!",
+  "ingameerror-notreinforced": "Cannot remove reinforcement. It's not reinforced!",
+  "ingameerror-notownblock": "Cannot remove reinforcement. This block does not belong to you!"
 }
