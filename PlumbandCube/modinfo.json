@@ -10,6 +10,6 @@
   "description": "For all your reinforcement desires.",
   "version": "2.1.0",
   "dependencies": {
-    "game": ""
+    "game": "1.22.0"
   }
 }
