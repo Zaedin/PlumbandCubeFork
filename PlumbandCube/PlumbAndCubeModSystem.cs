@@ -22,12 +22,12 @@ public class PlumbAndCubeModSystem : ModSystem
         ModConfig config;
         try
         {
-            config = api.LoadModConfig<ModConfig>("PlumbAndCubeConfig.json");
+            var configJson = api.LoadModConfig("PlumbAndCubeConfig.json");
+            config = configJson?.AsObject<ModConfig>();
             if (config == null)
             {
                 api.Logger.Event("No config found. Generating default config.");
                 config = new ModConfig();
-                api.StoreModConfig(config, "PlumbAndCubeConfig.json");
             }
         }
         catch (Exception e)
@@ -36,6 +36,7 @@ public class PlumbAndCubeModSystem : ModSystem
             config = new ModConfig();
         }
 
+        api.StoreModConfig(config, "PlumbAndCubeConfig.json");
         ModConfig.Instance = config;
 
         base.StartPre(api);
